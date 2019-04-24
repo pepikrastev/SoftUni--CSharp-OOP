@@ -1,23 +1,21 @@
-﻿namespace P08.MilitaryElite.Models
+﻿namespace _08_MilitaryElite.Models
 {
-    using P08.MilitaryElite.Contracts;
+    using _08_MilitaryElite.Contracts;
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
-    public class Private : Soldier, IPrivate
+    public class Private : Soldier, ISoldier
     {
-        public Private(string id, string firstName, string lastName, decimal salary) 
-            : base(id, firstName, lastName)
+        public Private(string id, string firstName, string lastName, decimal salary)
+            :base(id, firstName, lastName)
         {
             this.Salary = salary;
         }
 
         public decimal Salary { get; private set; }
 
-        public override string ToString()
+        public  override string ToString()
         {
-            return $"{base.ToString()} Salary: {this.Salary:f2}";
+            return $"Name: {this.FirstName} {this.LastName} Id: {this.Id} Salary: {this.Salary:f2}{Environment.NewLine}";
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿namespace P08.MilitaryElite.Contracts
+﻿namespace _08_MilitaryElite.Contracts
 {
     public interface ISoldier
     {
         string Id { get; }
 
         string FirstName { get; }
-        
-        string LastName { get; }
 
+        string LastName { get; }
     }
 }

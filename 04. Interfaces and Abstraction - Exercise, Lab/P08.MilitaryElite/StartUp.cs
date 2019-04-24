@@ -1,163 +1,92 @@
-﻿namespace P08.MilitaryElite
+﻿namespace _08_MilitaryElite
 {
-    using P08.MilitaryElite.Models;
-    using P08.MilitaryElite.Models.Privates;
-    using P08.MilitaryElite.Models.Privates.SpecialisedSoldiers;
+    using _08_MilitaryElite.Contracts;
+    using _08_MilitaryElite.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
     public class StartUp
     {
-        static void Main(string[] args)
+        public static void Main()
         {
-            string soldier = Console.ReadLine();
+            var soldiers = new List<ISoldier>();
 
-            List<Soldier> soldiers = new List<Soldier>();
-
-            while (soldier != "End")
+            var line = string.Empty;
+            while ((line = Console.ReadLine()) != "End")
             {
-                string[] soldierArgs = soldier.Split();
+                var tokens = line.Split();
+                var soldierRank = tokens[0];
+                var soldierId = tokens[1];
+                var soldierFirstName = tokens[2];
+                var soldierLastName = tokens[3];
+                var soldierSalary = 0.0m;
 
-                string soldierType = soldierArgs[0];
-                string id = soldierArgs[1];
-                string firstName = soldierArgs[2];
-                string lastName = soldierArgs[3];
-
-                if (soldierType == "Private")
+                switch (soldierRank)
                 {
-                    decimal salary = decimal.Parse(soldierArgs[4]);
+                    case "Private":
+                        soldierSalary = decimal.Parse(tokens[4]);
 
-                    Private @private = new Private(id, firstName, lastName, salary);
-                    soldiers.Add(@private);
+                        var privateSoldier = new Private(soldierId, soldierFirstName, soldierLastName, soldierSalary);
+                        soldiers.Add(privateSoldier);
 
-                }
-                else if (soldierType == "LieutenantGeneral")
-                {
-                    decimal salary = decimal.Parse(soldierArgs[4]);
+                        break;
 
-                    List<string> ids = soldierArgs.Skip(5).ToList();
+                    case "LieutenantGeneral":
+                        soldierSalary = decimal.Parse(tokens[4]);
+                        ICollection<ISoldier> subalterns = new List<ISoldier>();
 
-                    List<Private> privates = GetPrivates(ids, soldiers);
+                        foreach (var id in tokens.Skip(5))
+                        {
+                            subalterns.Add(soldiers.FirstOrDefault(s => s.Id == id));
+                        }
 
-                    LieutenantGeneral general = new LieutenantGeneral(id, firstName, lastName, salary, privates);
+                        var lieutenant = new LieutenantGeneral(soldierId, soldierFirstName, soldierLastName, soldierSalary, subalterns);
+                        soldiers.Add(lieutenant);
 
-                    soldiers.Add(general);
-                }
-                else if (soldierType == "Engineer")
-                {
-                    decimal salary = decimal.Parse(soldierArgs[4]);
-                    string corps = soldierArgs[5];
+                        break;
 
-                    List<string> repairArgs = soldierArgs.Skip(6).ToList();
+                    case "Engineer":
+                        soldierSalary = decimal.Parse(tokens[4]);
+                        var engineerCorps = tokens[5];
 
-                    List<Repair> repairs = GetRepaires(repairArgs);
+                        try
+                        {
+                            var engineer = new Engineer(soldierId, soldierFirstName, soldierLastName, soldierSalary, engineerCorps, tokens.Skip(6).ToArray());
+                            soldiers.Add(engineer);
+                        }
 
-                    try
-                    {
-                        Engineer engineer = new Engineer(id, firstName, lastName, salary, corps, repairs);
-                        soldiers.Add(engineer);
-                    }
-                    catch (Exception)
-                    {
-                    }
+                        catch (Exception)
+                        {
+                        }
+                        
+                        break;
 
-                }
-                else if (soldierType == "Commando")
-                {
-                    decimal salary = decimal.Parse(soldierArgs[4]);
-                    string corps = soldierArgs[5];
+                    case "Commando":
+                        soldierSalary = decimal.Parse(tokens[4]);
+                        var commandoCorps = tokens[5];
 
-                    List<string> missionArgs = soldierArgs.Skip(6).ToList();
-
-                    List<Mission> missions = GetMission(missionArgs);
-
-                    try
-                    {
-                        Commando commando = new Commando(id, firstName, lastName, salary, corps, missions);
-
+                        var commando = new Commando(soldierId, soldierFirstName, soldierLastName, soldierSalary, commandoCorps, tokens.Skip(6).ToArray());
                         soldiers.Add(commando);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    
-                }
-                else if (soldierType == "Spy")
-                {
-                    int codeNumber = int.Parse(soldierArgs[4]);
 
-                    Spy spy = new Spy(id, firstName, lastName, codeNumber);
-                    soldiers.Add(spy);
-                }
+                        break;
 
-                soldier = Console.ReadLine();
+                    case "Spy":
+                        var codeNumber = int.Parse(tokens[4]);
+
+                        var spy = new Spy(soldierId, soldierFirstName, soldierLastName, codeNumber);
+                        soldiers.Add(spy);
+
+                        break;
+
+                    default:
+                        break;
+                }
             }
-
-            foreach (var currentSoldier in soldiers)
+            foreach (var soldier in soldiers)
             {
-                Console.WriteLine(currentSoldier);
+                Console.Write(soldier);
             }
-
-
-        }
-
-        private static List<Mission> GetMission(List<string> missionArgs)
-        {
-            List<Mission> missions = new List<Mission>();
-
-            for (int i = 0; i < missionArgs.Count; i += 2)
-            {
-                string codeName = missionArgs[i];
-                string state = missionArgs[i + 1];
-
-                try
-                {
-                    Mission mission = new Mission(codeName, state);
-                    missions.Add(mission);
-                }
-                catch (Exception)
-                {
-                }
-
-            }
-
-            return missions;
-        }
-
-        private static List<Repair> GetRepaires(List<string> repairArgs)
-        {
-            List<Repair> repairs = new List<Repair>();
-
-            for (int i = 0; i < repairArgs.Count; i += 2)
-            {
-                string partName = repairArgs[i];
-                int hoursWorked = int.Parse(repairArgs[i + 1]);
-
-
-                Repair repair = new Repair(partName, hoursWorked);
-                repairs.Add(repair);
-            }
-
-            return repairs;
-        }
-
-        private static List<Private> GetPrivates(List<string> ids, List<Soldier> soldiers)
-        {
-            List<Private> privates = new List<Private>();
-
-            List<Soldier> filteredSoldiers = soldiers.Where(x => x.GetType().Name == nameof(Private)).ToList();
-
-            foreach (var id in ids)
-            {
-                if (soldiers.Select(x => x.Id).Contains(id))
-                {
-                    Private @private = (Private)soldiers.FirstOrDefault(x => x.Id == id);
-                    privates.Add(@private); 
-                }
-            }
-
-            return privates;
         }
     }
 }

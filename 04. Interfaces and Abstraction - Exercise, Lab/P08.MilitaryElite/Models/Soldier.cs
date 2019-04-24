@@ -1,25 +1,22 @@
-﻿namespace P08.MilitaryElite.Models
+﻿namespace _08_MilitaryElite.Models
 {
-    using P08.MilitaryElite.Contracts;
+    using _08_MilitaryElite.Contracts;
 
-    public class Soldier : ISoldier
+    public abstract class Soldier : ISoldier
     {
         public Soldier(string id, string firstName, string lastName)
         {
-          this.Id = id;
-          this.FirstName = firstName;
-          this.LastName = lastName;
+            this.Id = id;
+            this.FirstName = firstName;
+            this.LastName = lastName;
         }
 
-        public string Id { get; private set; }  
+        public string Id { get; set; }
 
-        public string FirstName { get; private set; }
+        public string FirstName { get; set; }
 
-        public string LastName { get; private set; }
+        public string LastName { get; set; }
 
-        public override string ToString()
-        {
-            return $"Name: {this.FirstName} {this.LastName} Id: {this.Id}";
-        }
+        public abstract override string ToString();
     }
 }

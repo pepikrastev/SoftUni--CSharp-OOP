@@ -1,6 +1,6 @@
-﻿namespace P08.MilitaryElite.Contracts
+﻿namespace _08_MilitaryElite.Contracts
 {
-    public interface IPrivate
+   public interface Iprivate : ISoldier
     {
         decimal Salary { get; }
     }
