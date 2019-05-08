@@ -13,16 +13,6 @@ namespace AnimalCentre
             IEngine engine = new Engine();
             engine.Run();
 
-           //Animal cat = new Lion("s", 12, 12, 12);
-
-           //cat.IsChipped = true;
-
-           //cat.Owner = "Cveti";
-
-
-           //Console.WriteLine(cat.IsChipped);
-           //Console.WriteLine(cat.Owner);
-           //Console.WriteLine(cat);
         }
     }
 }
