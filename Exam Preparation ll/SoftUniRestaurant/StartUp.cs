@@ -7,7 +7,10 @@ namespace SoftUniRestaurant
     {
         public static void Main()
         {
-            
+            RestaurantController restaurantController = new RestaurantController();
+            Engine engine = new Engine(restaurantController);
+
+            engine.Run();
         }
     }
 }
