@@ -19,8 +19,8 @@ namespace Telecom.Tests
         }
 
         [Test]
-        [TestCase("", "123Q")]
-        [TestCase(null, "magic")]
+        [TestCase("", "Samsung")]
+        [TestCase(null, "Sony")]
         public void MakeThrowsExceptionWithInvalidString(string invalidMake, string model)
         {
             Assert.Throws<ArgumentException>(() => new Phone(invalidMake, model));
@@ -28,7 +28,7 @@ namespace Telecom.Tests
 
         [Test]
         [TestCase("Sony", null)]
-        [TestCase("Mony", "")]
+        [TestCase("Samsung", "")]
         public void ModelThrowsExceptionWithInvalidString(string make, string invalidModel)
         {
             Assert.Throws<ArgumentException>(() => new Phone(make, invalidModel));
@@ -38,7 +38,7 @@ namespace Telecom.Tests
         public void CountWorksCorrectly()
         {
             Phone phone = new Phone("Sony", "123Q");
-            phone.AddContact("ivan", "0888777666");
+            phone.AddContact("Ivan", "0888777666");
             phone.AddContact("Mimi", "0888777666");
 
             int expected = 2;
